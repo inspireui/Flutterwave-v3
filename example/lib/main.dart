@@ -64,7 +64,7 @@ class _MyHomePageState extends State<MyHomePage> {
                   style: TextStyle(color: Colors.black),
                   decoration: InputDecoration(hintText: "Amount"),
                   validator: (value) =>
-                      value.isNotEmpty ? null : "Amount is required",
+                      value?.isNotEmpty ?? false ? null : "Amount is required",
                 ),
               ),
               Container(
@@ -78,8 +78,9 @@ class _MyHomePageState extends State<MyHomePage> {
                   decoration: InputDecoration(
                     hintText: "Currency",
                   ),
-                  validator: (value) =>
-                      value.isNotEmpty ? null : "Currency is required",
+                  validator: (value) => value?.isNotEmpty ?? false
+                      ? null
+                      : "Currency is required",
                 ),
               ),
               Container(
@@ -165,7 +166,7 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 
   _onPressed() {
-    if (this.formKey.currentState.validate()) {
+    if (this.formKey.currentState?.validate() ?? false) {
       this._handlePaymentInitialization();
     }
   }
@@ -187,12 +188,8 @@ class _MyHomePageState extends State<MyHomePage> {
         customization: Customization(title: "Test Payment"),
         isTestMode: this.isTestMode);
     final ChargeResponse response = await flutterwave.charge();
-    if (response != null) {
-      this.showLoading(response.toString());
-      print("${response.toJson()}");
-    } else {
-      this.showLoading("No Response!");
-    }
+    this.showLoading(response.toString());
+    print("${response.toJson()}");
   }
 
   String getPublicKey() {
